@@ -1,5 +1,8 @@
 exports.handler = async function(event, context) {
   try {
+
+    console.log("📦 OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
+
     const requestBody = JSON.parse(event.body);
     const userMessage = requestBody.message;
 
