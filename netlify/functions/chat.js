@@ -1,7 +1,12 @@
 exports.handler = async function(event, context) {
   try {
 
-    console.log("📦 OPENAI_API_KEY:", process.env.OPENAI_API_KEY);
+    if (process.env.OPENAI_API_KEY) {
+      console.log("✅ API 키가 세팅돼 있음!");
+    } else {
+      console.log("❌ API 키가 undefined 또는 비어 있음!");
+    }
+
 
     const requestBody = JSON.parse(event.body);
     const userMessage = requestBody.message;
