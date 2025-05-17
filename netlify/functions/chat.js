@@ -32,12 +32,13 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({ reply: data.choices[0].message.content }),
     };
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        reply: "에러가 발생했어 😢",
-        detail: error.message,
-      }),
-    };
-  }
+      console.error("🔥 GPT 호출 실패:", error);  // ← 이거 추가!
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          reply: "에러가 발생했어 😢",
+          detail: error.message,
+        }),
+      };
+    }
 };
