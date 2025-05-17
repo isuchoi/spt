@@ -1,5 +1,3 @@
-// netlify/functions/chat.js
-
 exports.handler = async function(event, context) {
   try {
     const requestBody = JSON.parse(event.body);
@@ -19,6 +17,19 @@ exports.handler = async function(event, context) {
 
     const data = await response.json();
 
+    // ✅ 방어코드 추가
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+        reply: "에러가 발생했어 😢",
+        detail: error.message,     // ✅ 이 부분 덕분에 오류 원인을 콘솔에서 확인할 수 있음!
+      }),
+    };
+  }
+      };
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({ reply: data.choices[0].message.content }),
@@ -26,7 +37,10 @@ exports.handler = async function(event, context) {
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Something went wrong.", detail: error.message }),
+      body: JSON.stringify({
+        reply: "에러가 발생했어 😢",
+        detail: error.message,
+      }),
     };
   }
 };
