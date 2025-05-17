@@ -3,6 +3,16 @@ exports.handler = async function(event, context) {
     const requestBody = JSON.parse(event.body);
     const userMessage = requestBody.message;
 
+    // ✅ 테스트용 응답 강제 삽입 (OpenAI 호출 생략)
+    const fakeReply = "나는 테스트 중이야! 써머가 곧 말을 시작할 거야 ☀️";
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ reply: fakeReply }),
+    };
+
+    // ❌ 아래 실제 OpenAI 호출은 지금은 주석 처리
+    /*
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -17,7 +27,6 @@ exports.handler = async function(event, context) {
 
     const data = await response.json();
 
-    // ✅ 응답이 올바르지 않을 때 방어
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       return {
         statusCode: 500,
@@ -31,14 +40,16 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       body: JSON.stringify({ reply: data.choices[0].message.content }),
     };
+    */
+
   } catch (error) {
-      console.error("🔥 GPT 호출 실패:", error);  // ← 이거 추가!
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          reply: "에러가 발생했어 😢",
-          detail: error.message,
-        }),
-      };
-    }
+    console.error("🔥 테스트 중 에러:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        reply: "에러가 발생했어 😢",
+        detail: error.message,
+      }),
+    };
+  }
 };
