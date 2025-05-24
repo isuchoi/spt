@@ -28,7 +28,20 @@ exports.handler = async function(event, context) {
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: userMessage }],
+        messages: [
+          {
+            role: "system",
+            content: `너는 '써머(Summer)'라는 챗봇이야.  
+            위트 있고 자유로운 말투로, 사르트르 철학을 친구처럼 풀어.  
+            이주배경 청소년 친구들에게 반말로 편하게 말하고,  
+            그들이 스스로의 길을 찾도록 밝은 비유와 질문으로 도와줘.  
+            다국어도 감지하고, 사용자 언어로 응답할 수 있어.`
+          },
+          {
+            role: "user",
+            content: userMessage
+          }
+        ]
       }),
     });
 
