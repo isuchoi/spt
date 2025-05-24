@@ -1,3 +1,4 @@
+/* 기본값: 써머 전용 */
 body {
   background-color: #fff7e6;
   font-family: 'Arial', sans-serif;
@@ -33,6 +34,43 @@ h2 {
   background-color: #ffecb3;
 }
 
+/* 🌸 포포 테마 */
+body.popo {
+  background-color: #f3e5f5;
+}
+body.popo h2 {
+  color: #8e24aa;
+}
+body.popo #chatbox {
+  border-color: #d1c4e9;
+  background: #ede7f6;
+}
+body.popo .user {
+  background-color: #ce93d8;
+}
+body.popo .bot {
+  background-color: #d1c4e9;
+}
+
+/* 🔵 텔리 테마 */
+body.telly {
+  background-color: #e3f2fd;
+}
+body.telly h2 {
+  color: #1976d2;
+}
+body.telly #chatbox {
+  border-color: #bbdefb;
+  background: #d0f0fd;
+}
+body.telly .user {
+  background-color: #90caf9;
+}
+body.telly .bot {
+  background-color: #bbdefb;
+}
+
+/* 📱 모바일 반응형 */
 @media (max-width: 600px) {
   #chatbox {
     height: 300px;
