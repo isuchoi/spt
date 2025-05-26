@@ -5,15 +5,20 @@ exports.handler = async function(event, context) {
     if (!apiKey) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ reply: "API 키가 설정되지 않았어요 😢" })
+        body: JSON.stringify({ reply: "API 키가 설정되지 않았어요 😢" }),
       };
     }
 
     const requestBody = JSON.parse(event.body);
     const userMessage = requestBody.message;
-    const character = requestBody.character || "summer";  // 💡 캐릭터 기본값: 써머
+    const character = requestBody.character || "summer";
+    const userId = requestBody.userId || "anonymous"; // 사용자 구분 키
 
-    // 💬 캐릭터별 system 메시지 설정
+    // 🧠 메모리 기반 세션 저장소 (서버리스라서 임시)
+    if (!global.userSessions) global.userSessions = {};
+    if (!global.userSessions[userId]) global.userSessions[userId] = [];
+
+    // 💬 캐릭터별 system 메시지
     let systemMessage = "";
 
     if (character === "popo") {
@@ -24,6 +29,15 @@ exports.handler = async function(event, context) {
       systemMessage = "넌 써머야. 위트 있고 자유로운 말투로, 사르트르 철학을 친구처럼 풀어. 이주배경 청소년에게 반말로 편하게 말하고, 밝은 비유와 질문으로 자기 길을 찾도록 도와줘.";
     }
 
+    // 💾 이전 흐름에 사용자 메시지 추가
+    global.userSessions[userId].push({ role: "user", content: userMessage });
+
+    // 🧠 전체 메시지 구성
+    const messages = [
+      { role: "system", content: systemMessage },
+      ...global.userSessions[userId],
+    ];
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -31,11 +45,8 @@ exports.handler = async function(event, context) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: systemMessage },
-          { role: "user", content: userMessage }
-        ]
+        model: "gpt-4", // 또는 "gpt-4-turbo"
+        messages: messages,
       }),
     });
 
@@ -48,6 +59,13 @@ exports.handler = async function(event, context) {
     }
 
     const data = await response.json();
+
+    // 💬 GPT 응답 저장
+    global.userSessions[userId].push({
+      role: "assistant",
+      content: data.choices[0].message.content,
+    });
+
     return {
       statusCode: 200,
       body: JSON.stringify({ reply: data.choices[0].message.content }),
