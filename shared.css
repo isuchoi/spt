@@ -72,6 +72,10 @@ body.telly .bot {
 
 /* 📱 모바일 반응형 */
 @media (max-width: 600px) {
+  body {
+    font-size: 18px;
+    padding-top: 16px; /* ⬅️ 이거 살짝만 넣어줘도 감성 높아짐! */
+  }
   #chatbox {
     height: 300px;
     font-size: 14px;
